@@ -14,6 +14,10 @@ NEWS AND UPDATES
 THANKS
 	>
 
+REQUIREMENTS
+	> PHP 5.2+
+	> cURL Library
+
 INSTALLATION
 	> Upload xbox.php to your server or local webserver. You will then have
 	  to include the file into your script. Instantiate the XboxGamercard class
