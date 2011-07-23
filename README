@@ -1,0 +1,26 @@
+Xbox Gamercard Data - Simple gamertag data scraper
+Author: Jason Clemons <jclemons@jblaze.net>
+
+This scraper allows you to retrieve data for a given gamertag. It will
+return basic results such as gamerscore, reputation, location, name,
+motto and data from the last 5 played games.
+
+CHANGELOG
+	> 7/23/2011: Initial commit
+
+NEWS AND UPDATES
+	>
+
+THANKS
+	>
+
+INSTALLATION
+	> Upload xbox.php to your server or local webserver. You will then have
+	  to include the file into your script. Instantiate the XboxGamercard class
+	  and then you can call $this->build_request('gamertag'); which will return
+	  an object with all the data.
+	> You can also specify a region code in build_request($gamertag, $region) such
+	  as jp-JP or other regions and languages. It defaults to en-US.
+
+LICENSE
+	> Please see the LICENSE file included.
