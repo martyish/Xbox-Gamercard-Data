@@ -2,13 +2,6 @@
 
 class XboxGamercard {
 	/**
-	 * The gamertag to get data for
-	 *
-	 * @var string
-	 */
-	public $gamertag;
-
-	/**
 	 * Constructor
 	 *
 	 * @return void
@@ -22,7 +15,7 @@ class XboxGamercard {
 	 * @param string
 	 * @return string
 	 */
-	private function get_tid( $string )
+	private function get_tid($string)
 	{
 		$tid = parse_url( $string );
 		$tid = explode( '&', html_entity_decode( $tid['query'] ) );
@@ -163,11 +156,13 @@ class XboxGamercard {
 		preg_match( '~<div id="Bio">(.*?)</div>~si', $object, $bio );
 		$xbox_data->bio = (string)$bio[1];
 
-		/**
-		 * The 5 recently played games 
-		 */
+		/* Check to see if there are any played games */
 		if (!preg_match('~<ol id="PlayedGames" class="NoGames">~', $object)) {
+
+			/* Grab the played games as a whole */
 			preg_match('~<ol id="PlayedGames" >(.*?)</ol>~si', $object, $recent_games);
+
+			/* Parse out each individual game */
 			preg_match_all('~<li.*?>.*?<a href="(.*?)">.*?<img src="(.*?)" alt=".*?" title=".*?" />.*?<span class="Title">(.*?)</span>.*?<span class="LastPlayed">(.*?)</span>.*?<span class="EarnedGamerscore">(.*?)</span>.*?<span class="AvailableGamerscore">(.*?)</span>.*?<span class="EarnedAchievements">(.*?)</span>.*?<span class="AvailableAchievements">(.*?)</span>.*?<span class="PercentageComplete">(.*?)%</span>.*?</a>.*?</li>~si', $recent_games[1], $lastplayed, PREG_SET_ORDER);
 
 			$i = 1;
@@ -259,14 +254,13 @@ class XboxGamercard {
 	 * @return object
 	 */
 	public function build_request($gamertag, $region = 'en-US') {
+
 		/* Make sure the gamertag is properly formatted */
 		if (!preg_match('/^(?=.{1,15}$)[a-zA-Z][a-zA-Z0-9]*(?: [a-zA-Z0-9]+)*$/', $gamertag))
 			throw new Exception('The gamertag supplied is invalid!');
 
-		$this->gamertag = $gamertag;
-
 		$curl_opt_array = array(
-			CURLOPT_URL => 'http://gamercard.xbox.com/' . $region . '/' . rawurlencode($this->gamertag) . '.card',
+			CURLOPT_URL => 'http://gamercard.xbox.com/' . $region . '/' . rawurlencode($gamertag) . '.card',
 			CURLOPT_USERAGENT => 'Xbox-Gamercard-Data;',
 			CURLOPT_HEADER => false,
 			CURLOPT_FOLLOWLOCATION => false,
@@ -275,13 +269,10 @@ class XboxGamercard {
 
 		$ch = curl_init();
 		curl_setopt_array($ch, $curl_opt_array);
+
 		$data = curl_exec($ch);
 		curl_close($ch);
 
 		return $this->parse_data($data);
 	}
 }
-
-$xbox = new XboxGamercard();
-$xbox->build_request('JI IB IL A Z IE');
-print_r($xbox);
